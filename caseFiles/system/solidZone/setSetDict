@@ -1,0 +1,2 @@
+cellSet heatSourceSet new boxToCell (0.245 0.245 0)(0.255 0.255 0.1)
+cellZoneSet heatSource new setToCellZone heatSourceSet

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo -e "importing mesh from salome"
+ideasUnvToFoam mesh.unv >&1 | tee log.mesh
+
+cp -r 0.orig/ 0
+
+echo -e "spliting Mesh regions from cell zones"
+splitMeshRegions -cellZones -overwrite >&1 | tee log.splitMesh
+
+
+echo -e "removing old mesh"
+rm -r constant/polyMesh
+
+echo -e "Removing the unneccesary files from 0"
+for region in $(foamListRegions solid)
+do
+    rm -f 0/$region/{nut,alphat,epsilon,k,U,p_rgh}
+    rm -f processor*/0/$region/{nut,alphat,epsilon,k,U,p_rgh}
+done
+
+echo -e "changeDictionary for all the regions"
+for region in $(foamListRegions)
+do
+    changeDictionary -region $region
+done
+
+echo -e "setting temperature"
+setFields -region $(foamListRegions solid)
+setSet -region solidZone -batch system/solidZone/setSetDict
+
+echo -e "Running the simulation"
+foamJob chtMultiRegionFoam

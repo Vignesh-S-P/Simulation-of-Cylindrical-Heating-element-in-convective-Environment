@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1806                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+/*scalarSource
+{
+    type scalarSemiImplicitSource;
+    active true;
+    timeStart 0;
+    duration 500;
+
+    scalarSemiImplicitSourceCoeffs
+    {
+        volumeMode    absolute;         
+        selectionMode cellSet;
+        cellSet heatSourceSet;
+         
+        injectionRateSuSp
+        {
+            T (500 0);
+        }
+    }
+}*/
+fixedTemperature
+{
+    type            fixedTemperatureConstraint;
+    active          yes;
+    timeStart 0;
+    duration 500;
+
+
+    selectionMode   cellZone;
+    cellZone        heatSource;
+
+    mode            uniform;      // uniform or lookup
+
+    
+    temperature     constant 500; // fixed temperature with time [K]
+
+    
+}
+// ************************************************************************* //
